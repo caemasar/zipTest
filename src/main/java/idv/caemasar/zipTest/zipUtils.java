@@ -223,8 +223,9 @@ public class zipUtils {
 	}
 
 	public static void main(String[] args) {
+//		String dir = "d:\\ziptest\\rawfiles";
 		String zipPath = "d:\\ziptest\\zipPath";
-		String dir = "d:\\ziptest\\rawfiles";
+		String dir = "d:\\ziptest\\rawfiles\\go.txt";
 		String zipFileName = "test.zip";
 		try {
 			zip(dir, zipPath, zipFileName);
