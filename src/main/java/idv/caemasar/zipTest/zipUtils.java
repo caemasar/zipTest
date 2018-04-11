@@ -5,7 +5,9 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.zip.CRC32;
 import java.util.zip.CheckedOutputStream;
 import java.util.zip.ZipEntry;
@@ -222,23 +224,72 @@ public class zipUtils {
 		}
 	}
 
+	public class ZipTree {
+		private String name;
+		private List<ZipTree> children;
+
+		public String getName() {
+			return name;
+		}
+
+		public void setName(String name) {
+			this.name = name;
+		}
+
+		public List<ZipTree> getChildren() {
+			return children;
+		}
+
+		public void setChildren(List<ZipTree> children) {
+			this.children = children;
+		}
+
+	}
+
+	public static List<String> getZipDir(String zipFilePath) {
+		try {
+			List<String> zipDirs = new ArrayList<String>();
+			File zipFile = new File(zipFilePath);
+
+			ZipFile zip = new ZipFile(zipFile);
+			Enumeration<ZipEntry> entries = (Enumeration<ZipEntry>) zip.entries();
+			ZipEntry entry = null;
+			// 循环对压缩包里的每一个文件进行解压
+			while (entries.hasMoreElements()) {
+				entry = entries.nextElement();
+				zipDirs.add(entry.getName());
+			}
+			return zipDirs;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
 	public static void main(String[] args) {
-//		String dir = "d:\\ziptest\\rawfiles";
-		String zipPath = "d:\\ziptest\\zipPath";
-		String dir = "d:\\ziptest\\rawfiles\\go.txt";
+		String dir = "d:\\ziptest\\rawfiles";
+		// String zipPath = "d:\\ziptest\\zipPath";
+		String zipPath = "d:\\ziptest";
+		// String dir = "d:\\ziptest\\rawfiles\\go.txt";
 		String zipFileName = "test.zip";
 		try {
 			zip(dir, zipPath, zipFileName);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
-		String zipFilePath = "D:\\ziptest\\zipPath\\test.zip";
+		// String zipFilePath = "d:\\ziptest\\test.zip";
+		String zipFilePath = zipPath + File.separator + zipFileName;
 		String unzipFilePath = "D:\\ziptest\\zipPath";
-		try {
-			unzip(zipFilePath, unzipFilePath, true);
-		} catch (Exception e) {
-			e.printStackTrace();
+		String unzipFilePath2 = "D:\\ziptest\\zipPath2";
+		List<String> zipDirs = getZipDir(zipFilePath);
+		for (String zipDir : zipDirs) {
+			System.out.println(zipDir);
 		}
+		 try {
+		 unzip(zipFilePath, unzipFilePath, true);
+		 unzip(zipFilePath, unzipFilePath2, false);
+		 } catch (Exception e) {
+		 e.printStackTrace();
+		 }
 	}
 }
